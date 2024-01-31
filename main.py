@@ -4,8 +4,8 @@ from pygame.locals import *
 pygame.init()
 import random
 
-clock = pygame.time.Clock
-fps = 60
+# clock = pygame.time.Clock
+# fps = 60
 
 print("hell yeah this is a game")
 
@@ -19,9 +19,11 @@ background = pygame.image.load("stars.jpg").convert()
 cat = pygame.image.load("spacecat.png").convert_alpha()
 pie = pygame.image.load("pie.png").convert_alpha()
 
+def draw_backgroung():
+    displaySurface.blit(background, (0,0))
+
 
 displaySurface.blit(cat, (600, 800))
-displaySurface.blit(background, (0,0))
 displaySurface.blit(pie, (0,0))
 
 pygame.display.flip()
@@ -36,9 +38,9 @@ pieArea.top = 0
 
 while True:
 
-    clock.tick(fps)
+   
 
-    
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -59,8 +61,8 @@ while True:
     
     catArea.clamp_ip(screen_rect)
 
-
-    displaySurface.blit(background, (0,0))
+    draw_backgroung() #replaces the need to have dispsurf.blit.background
+    
     displaySurface.blit(cat, catArea)
     displaySurface.blit(pie, pieArea)
 
