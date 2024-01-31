@@ -15,23 +15,36 @@ pygame.display.set_caption("Cats in Space")
 background = pygame.image.load("stars.jpg").convert()
 cat = pygame.image.load("spacecat.png").convert_alpha()
 
-bullet = pygame.Surface((10,10)) #bullet is a rectangle
-white = (255,255,255)
-bullet.fill(white)
-
 
 displaySurface.blit(background, (0,0))
 displaySurface.blit(cat, (600, 800))
-displaySurface.blit(bullet, (550,700))
 
 pygame.display.flip()
 
 catArea = cat.get_rect(bottomleft = (600,800))
+
+#this part of code creates bullets and necessary lists
+
+bullet = pygame.Surface((10,10)) #bullet is a rectangle
+white = (255,255,255)
+bullet.fill(white)
+
+bulletEvent = pygame.event.Event(pygame.USEREVENT+1)
+pygame.time.set_timer(bulletEvent, 1000)
+
+bulletspeed = [0,-1] #bullets move up only
+bullets = []
+bcoordinates = []
+bspeedlist = []
 bulletArea = bullet.get_rect(topleft=(catArea.centerx, catArea.top)) #bullet is positioned on cat's top center
 
-bulletspeed = [0,-1]
-bullets = []
+def create_bullet():
+    bulletArea = bullet.get_rect(topleft=(catArea.centerx, catArea.top)) 
+    bullets.append(bullet)
+    bcoordinates.append(bulletArea)
+    bspeedlist.append(list(bulletspeed))
 
+#here pie and lists are created
 pie = pygame.image.load("pie.png").convert_alpha()
 
 pointEvent = pygame.event.Event(pygame.USEREVENT)
@@ -63,10 +76,8 @@ while True:
             if event.key == K_ESCAPE:
                 pygame.quit()
                 sys.exit()
-        if event.type == KEYDOWN: #if space is pressed, bullet shoots 
-            if event.key == K_SPACE:
-                bulletArea = bullet.get_rect(topleft=(catArea.centerx, catArea.top))
-                bullets.append(bulletArea) 
+            elif event.key == K_SPACE:
+                create_bullet() 
         if event.type == pygame.USEREVENT: #creates pies every 2000milliseconds
             create_pie()
    
@@ -78,11 +89,11 @@ while True:
     if pressings[K_RIGHT]:
         catArea.move_ip((2,0))  
     catArea.clamp_ip(screen_rect)
+    
 
-    for bulletArea in bullets: #bullet moves 
-        bulletArea.move_ip((bulletspeed))
+    for i in range(len(bullets)):
+        bcoordinates[i].move_ip(bspeedlist[i])
 
-    # bullets = [bulletArea for bulletArea in bullets if bulletArea.bottom > 0]
 
     for i in range(len(pieList)):
             coordinateList[i].move_ip(speedList[i])
@@ -92,21 +103,25 @@ while True:
                 del speedList[i]
                 create_pie()  # Create a new pie
 
+    j = 0 #every time a collision between pie and bullet happens, both of them are removed from the lists
+    for i in range(len(pieList)-1, -1, -1):
+        for j, bulletArea in enumerate(bcoordinates):
+            if bulletArea.colliderect(coordinateList[i]):
+                del pieList[i]
+                del coordinateList[i]
+                del speedList[i]
+                del bcoordinates[j]
+                del bspeedlist[j]
+                del bullets[j]
+                break
 
-    j = 0
-    for i in range(len(pieList)): #every time bullet hits the pie, it disappears and gets removed from the lists
-        if bulletArea.colliderect(coordinateList[i - j]): 
-            del pieList[i - j] 
-            del coordinateList[i - j]
-            del speedList[i - j]
-            j += 1
-            
     clock.tick(260) #speed of the game
 
     displaySurface.blit(background, (0,0))
     displaySurface.blit(cat, catArea)
-    displaySurface.blit(bullet, bulletArea)
 
+    for i in range(0,len(bullets)): #blits bullets into the screen
+        displaySurface.blit(bullets[i], bcoordinates[i])
     for i in range(0,len(pieList)): #blits pies into the screen repeatedly
         displaySurface.blit(pieList[i], coordinateList[i])
 
