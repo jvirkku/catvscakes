@@ -21,13 +21,14 @@ displaySurface.blit(cat, (600, 800))
 
 pygame.display.flip()
 
-catArea = cat.get_rect(bottomleft = (600,800))
+catArea = cat.get_rect(bottomleft = (600,900))
 
 #this part of code creates bullets and necessary lists
 
 bullet = pygame.Surface((10,10)) #bullet is a rectangle
 white = (255,255,255)
-bullet.fill(white)
+pink = (255,0,130)
+bullet.fill(pink)
 
 bulletEvent = pygame.event.Event(pygame.USEREVENT+1)
 pygame.time.set_timer(bulletEvent, 1000)
@@ -64,6 +65,9 @@ def create_pie():
 
 
 clock = pygame.time.Clock()
+
+pygame.mixer.music.load("gamemusic.wav")
+pygame.mixer.music.play(-1)
 
 while True:
 
