@@ -49,12 +49,16 @@ def create_bullet():
 pie = pygame.image.load("pie.png").convert_alpha()
 
 pointEvent = pygame.event.Event(pygame.USEREVENT)
-pygame.time.set_timer(pointEvent,2000)
+pygame.time.set_timer(pointEvent,1500)
 
 pieList = [] # list of pies
 speed2 = [0, 1]  # pies move down only
 coordinateList = [] #list of coordinates for pie
 speedList = [] #list of speeds for pies
+
+points = 0
+font = pygame.font.Font("freesansbold.ttf", 30)
+text = font.render('Points: '+str(points) , True, white)
 
 #function to create new pies and add them to lists
 def create_pie():
@@ -63,6 +67,14 @@ def create_pie():
     coordinateList.append(pieArea)
     speedList.append(list(speed2))
 
+gameover = pygame.Surface((1280,905))
+gameover.fill(white)
+endingtext = font.render("Game Over!", True, pink)
+gameoverArea = gameover.get_rect()
+textArea = endingtext.get_rect()
+textArea = endingtext.get_rect()
+textArea.center = (-300, -400)
+gameoverArea = gameover.get_rect(topleft=(-1000,-1000)) 
 
 clock = pygame.time.Clock()
 
@@ -106,11 +118,18 @@ while True:
                 del coordinateList[i]
                 del speedList[i]
                 create_pie()  # Create a new pie
+                points = points-2
+                text = font.render('Points: '+str(points), True, white)
+                if points <= 0:
+                    gameoverArea = gameover.get_rect(topleft=(0,0)) # gameover screen appears
+                    textArea = endingtext.get_rect(center = (600, 452))
 
     j = 0 #every time a collision between pie and bullet happens, both of them are removed from the lists
     for i in range(len(pieList)-1, -1, -1):
         for j, bulletArea in enumerate(bcoordinates):
             if bulletArea.colliderect(coordinateList[i]):
+                points = points + 1
+                text = font.render('Points: '+str(points), True, white)
                 del pieList[i]
                 del coordinateList[i]
                 del speedList[i]
@@ -118,6 +137,8 @@ while True:
                 del bspeedlist[j]
                 del bullets[j]
                 break
+
+
 
     clock.tick(260) #speed of the game
 
@@ -128,5 +149,7 @@ while True:
         displaySurface.blit(bullets[i], bcoordinates[i])
     for i in range(0,len(pieList)): #blits pies into the screen repeatedly
         displaySurface.blit(pieList[i], coordinateList[i])
-
+    displaySurface.blit(text, (0,0))
+    displaySurface.blit(gameover, gameoverArea)
+    displaySurface.blit(endingtext,textArea)
     pygame.display.flip()
