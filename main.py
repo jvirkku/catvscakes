@@ -9,7 +9,7 @@ width = 1280
 height = 854
 displaySurface = pygame.display.set_mode((width, height))
 screen_rect = displaySurface.get_rect()
-pygame.display.set_caption("Cats in Space")
+pygame.display.set_caption("Cats VS Cakes")
 
 
 background = pygame.image.load("stars.jpg").convert()
