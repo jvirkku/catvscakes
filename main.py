@@ -21,7 +21,7 @@ displaySurface.blit(cat, (600, 800))
 
 pygame.display.flip()
 
-catArea = cat.get_rect(bottomleft=(600, 800))
+catArea = cat.get_rect(bottomleft=(600, 900))
 
 white = (255, 255, 255)
 pink = (255, 0, 130)
