@@ -72,72 +72,96 @@ textArea = endingtext.get_rect()
 textArea.center = (-300, -400)
 gameoverArea = gameover.get_rect(topleft=(-1000,-1000))
 
+
+
 clock = pygame.time.Clock()
 
 pygame.mixer.music.load("gamemusic.wav")
 pygame.mixer.music.play(-1)
 
+menu = pygame.image.load("main_menu.png").convert()
+displaySurface.blit(menu, (100, 100))
+menuArea = menu.get_rect(topleft=(100,100))
+
 while True:
+    
+    displaySurface.blit(menu, menuArea)
+    pygame.display.flip()
+
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        if event.type == KEYDOWN:
-            if event.key == K_ESCAPE:
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            elif event.key == K_SPACE:
-                create_bullet()
-        if event.type == pygame.USEREVENT:  # creates pies every 2000milliseconds
-            create_pie()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+                elif event.key == K_RETURN:
+                    while True:
+                        menuArea = menu.get_rect(topleft=(-1000,-1000))
+                        for event in pygame.event.get():
+                            if event.type == pygame.QUIT:
+                                pygame.quit()
+                                sys.exit()
+                            if event.type == KEYDOWN:
+                                if event.key == K_ESCAPE:
+                                    pygame.quit()
+                                    sys.exit()
+                                elif event.key == K_SPACE:
+                                    create_bullet()
+                            if event.type == pygame.USEREVENT:  # creates pies every 2000milliseconds
+                                create_pie()
 
-    pressings = pygame.key.get_pressed()  # key pressings for cat, moves only horizontally and stays inside the screen
-    if pressings[K_LEFT]:
-        catArea.move_ip((-2, 0))
-    if pressings[K_RIGHT]:
-        catArea.move_ip((2, 0))
-    catArea.clamp_ip(screen_rect)
+                        pressings = pygame.key.get_pressed()  # key pressings for cat, moves only horizontally and stays inside the screen
+                        if pressings[K_LEFT]:
+                            catArea.move_ip((-2, 0))
+                        if pressings[K_RIGHT]:
+                            catArea.move_ip((2, 0))
+                        catArea.clamp_ip(screen_rect)
 
-    for i in range(len(bullets)):
-        bcoordinates[i].move_ip(bspeedlist[i])
+                        for i in range(len(bullets)):
+                            bcoordinates[i].move_ip(bspeedlist[i])
 
-    for i in range(len(pieList)):
-        coordinateList[i].move_ip(speedList[i])
-        if coordinateList[i].top > height:  # Remove pies that go below the screen
-            del pieList[i]
-            del coordinateList[i]
-            del speedList[i]
-            create_pie()  # Create a new pie
-            points = points-2
-            text = font.render('Points: '+str(points), True, white)
-            if points <= 0:
-                gameoverArea = gameover.get_rect(topleft=(0,0)) # gameover screen appears
-                textArea = endingtext.get_rect(center = (600, 452))
+                        for i in range(len(pieList)):
+                            coordinateList[i].move_ip(speedList[i])
+                            if coordinateList[i].top > height:  # Remove pies that go below the screen
+                                del pieList[i]
+                                del coordinateList[i]
+                                del speedList[i]
+                                create_pie()  # Create a new pie
+                                points = points-2
+                                text = font.render('Points: '+str(points), True, white)
+                                if points <= 0:
+                                    gameoverArea = gameover.get_rect(topleft=(0,0)) # gameover screen appears
+                                    textArea = endingtext.get_rect(center = (600, 452))
 
-    j = 0  # every time a collision between pie and bullet happens, both of them are removed from the lists
-    for i in range(len(pieList) - 1, -1, -1):
-        for j, bulletArea in enumerate(bcoordinates):
-            if bulletArea.colliderect(coordinateList[i]):
-                points = points + 1
-                text = font.render('Points: '+str(points), True, white)
-                del pieList[i]
-                del coordinateList[i]
-                del speedList[i]
-                del bcoordinates[j]
-                del bspeedlist[j]
-                del bullets[j]
-                break
+                        j = 0  # every time a collision between pie and bullet happens, both of them are removed from the lists
+                        for i in range(len(pieList) - 1, -1, -1):
+                            for j, bulletArea in enumerate(bcoordinates):
+                                if bulletArea.colliderect(coordinateList[i]):
+                                    points = points + 1
+                                    text = font.render('Points: '+str(points), True, white)
+                                    del pieList[i]
+                                    del coordinateList[i]
+                                    del speedList[i]
+                                    del bcoordinates[j]
+                                    del bspeedlist[j]
+                                    del bullets[j]
+                                    break
 
-    clock.tick(260)  # speed of the game
+                        clock.tick(260)  # speed of the game
 
-    displaySurface.blit(background, (0, 0))
-    displaySurface.blit(cat, catArea)
+                        displaySurface.blit(background, (0, 0))
+                        displaySurface.blit(cat, catArea)
 
-    for i in range(0, len(bullets)):  # blits bullets into the screen
-        displaySurface.blit(bullets[i], bcoordinates[i])
-    for i in range(0, len(pieList)):  # blits pies into the screen repeatedly
-        displaySurface.blit(pieList[i], coordinateList[i])
-    displaySurface.blit(text, (0,0))
-    displaySurface.blit(gameover, gameoverArea)
-    displaySurface.blit(endingtext,textArea)
-    pygame.display.flip()
+                        for i in range(0, len(bullets)):  # blits bullets into the screen
+                            displaySurface.blit(bullets[i], bcoordinates[i])
+                        for i in range(0, len(pieList)):  # blits pies into the screen repeatedly
+                            displaySurface.blit(pieList[i], coordinateList[i])
+                        displaySurface.blit(text, (0,0))
+                        displaySurface.blit(gameover, gameoverArea)
+                        displaySurface.blit(endingtext,textArea)
+                        displaySurface.blit(menu, menuArea)
+                        pygame.display.flip()
+
+
