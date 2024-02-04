@@ -9,10 +9,10 @@ width = 1280
 height = 854
 displaySurface = pygame.display.set_mode((width, height))
 screen_rect = displaySurface.get_rect()
-pygame.display.set_caption("Cats VS Cakes")
+pygame.display.set_caption("Cat VS Cakes")
 
 
-background = pygame.image.load("stars.jpg").convert()
+background = pygame.image.load("cartoon_space.png").convert()
 cat = pygame.image.load("spacecat.png").convert_alpha()
 bullet = pygame.image.load("laser_bullet.png").convert_alpha()
 
