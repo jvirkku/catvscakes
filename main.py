@@ -6,7 +6,7 @@ pygame.init()
 
 
 width = 1280
-height = 854
+height = 900
 displaySurface = pygame.display.set_mode((width, height))
 screen_rect = displaySurface.get_rect()
 pygame.display.set_caption("Cat VS Cakes")
@@ -29,7 +29,7 @@ pink = (255, 0, 130)
 bulletEvent = pygame.event.Event(pygame.USEREVENT + 1)
 pygame.time.set_timer(bulletEvent, 1000)
 
-bulletspeed = [0, -1]  # bullets move up only
+bulletspeed = [0, -2]  # bullets move up only
 bullets = []
 bcoordinates = []
 bspeedlist = []
@@ -80,8 +80,10 @@ pygame.mixer.music.load("gamemusic.wav")
 pygame.mixer.music.play(-1)
 
 menu = pygame.image.load("main_menu.png").convert()
-displaySurface.blit(menu, (100, 100))
-menuArea = menu.get_rect(topleft=(100,100))
+displaySurface.blit(menu, (0, 0))
+menuArea = menu.get_rect(topleft=(0,0))
+
+
 
 while True:
     
@@ -134,6 +136,7 @@ while True:
                                 if points <= 0:
                                     gameoverArea = gameover.get_rect(topleft=(0,0)) # gameover screen appears
                                     textArea = endingtext.get_rect(center = (600, 452))
+
 
                         j = 0  # every time a collision between pie and bullet happens, both of them are removed from the lists
                         for i in range(len(pieList) - 1, -1, -1):
