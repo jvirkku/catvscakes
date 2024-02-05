@@ -12,7 +12,7 @@ screen_rect = displaySurface.get_rect()
 pygame.display.set_caption("Cat VS Cakes")
 
 
-background = pygame.image.load("cartoon_space.png").convert()
+background = pygame.image.load("universe.jpg").convert()
 cat = pygame.image.load("spacecat.png").convert_alpha()
 bullet = pygame.image.load("laser_bullet.png").convert_alpha()
 
@@ -65,14 +65,14 @@ def create_pie():
     coordinateList.append(pieArea)
     speedList.append(list(speed2))
 
-gameover = pygame.Surface((1280,905))
-gameover.fill(white)
-endingtext = font.render("Game Over!", True, pink)
+gameover = pygame.image.load("universe.jpg").convert()
+endingcat = pygame.image.load("sadcat.png").convert_alpha()
+
+endingtext = font.render("Game Over!", True, white)
 textArea = endingtext.get_rect()
 textArea.center = (-300, -400)
-gameoverArea = gameover.get_rect(topleft=(-1000,-1000))
-
-
+gameoverArea = gameover.get_rect(topleft=(-10000,-10000))
+endingcatArea = endingcat.get_rect(topleft=(-1000, -1000))
 
 clock = pygame.time.Clock()
 
@@ -136,7 +136,7 @@ while True:
                                 if points <= 0:
                                     gameoverArea = gameover.get_rect(topleft=(0,0)) # gameover screen appears
                                     textArea = endingtext.get_rect(center = (600, 452))
-
+                                    endingcatArea = endingcat.get_rect(topleft=(700, 400))
 
                         j = 0  # every time a collision between pie and bullet happens, both of them are removed from the lists
                         for i in range(len(pieList) - 1, -1, -1):
@@ -165,6 +165,7 @@ while True:
                         displaySurface.blit(gameover, gameoverArea)
                         displaySurface.blit(endingtext,textArea)
                         displaySurface.blit(menu, menuArea)
+                        displaySurface.blit(endingcat, endingcatArea)
                         pygame.display.flip()
 
 
