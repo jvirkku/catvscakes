@@ -15,26 +15,32 @@ pygame.display.set_caption("Cat VS Cakes")
 background = pygame.image.load("universe.jpg").convert()
 cat = pygame.image.load("spacecat.png").convert_alpha()
 bullet = pygame.image.load("laser_bullet.png").convert_alpha()
+gameover = pygame.image.load("universe.jpg").convert()
+menu = pygame.image.load("main_menu.png").convert()
+gameoverArea = gameover.get_rect(topleft=(-10000,-10000))
+gameovertext = pygame.image.load("game_over_text.png").convert_alpha()
 
 displaySurface.blit(background, (0, 0))
 displaySurface.blit(cat, (600, 800))
-
-pygame.display.flip()
-
-catArea = cat.get_rect(bottomleft=(600, 900))
+displaySurface.blit(menu, (0, 0))
 
 white = (255, 255, 255)
-pink = (255, 0, 130)
+orange = ((255,100,10))
+font = pygame.font.Font("freesansbold.ttf", 30)
 
-bulletEvent = pygame.event.Event(pygame.USEREVENT + 1)
-pygame.time.set_timer(bulletEvent, 1000)
+menuArea = menu.get_rect(topleft=(0,0))
+catArea = cat.get_rect(bottomleft=(600, 900))
+gameovertextAREA = gameovertext.get_rect(midtop=(-5500,-5500))
 
+howtoplay = font.render("Shoot evil cakes for points, missing cakes will decrease your points.", True, orange)
+luck = font.render("Good Luck!", True, orange)
+
+#bullets
 bulletspeed = [0, -2]  # bullets move up only
 bullets = []
 bcoordinates = []
 bspeedlist = []
 bulletArea = bullet.get_rect(topleft=(catArea.centerx, catArea.top))  # bullet is positioned on cat's top center
-
 
 def create_bullet():
     bulletArea = bullet.get_rect(topleft=(catArea.centerx, catArea.top)) 
@@ -42,8 +48,7 @@ def create_bullet():
     bcoordinates.append(bulletArea)
     bspeedlist.append(list(bulletspeed))
 
-
-# here pie and lists are created
+# cakes
 pie = pygame.image.load("pie.png").convert_alpha()
 
 pointEvent = pygame.event.Event(pygame.USEREVENT)
@@ -53,9 +58,8 @@ pieList = [] # list of pies
 speed2 = [0, 1]  # pies move down only
 coordinateList = []  # list of coordinates for pie
 speedList = []  # list of speeds for pies
-
 points = 0
-font = pygame.font.Font("freesansbold.ttf", 30)
+
 text = font.render('Points: '+str(points) , True, white)
 
 #function to create new pies and add them to lists
@@ -65,29 +69,19 @@ def create_pie():
     coordinateList.append(pieArea)
     speedList.append(list(speed2))
 
-gameover = pygame.image.load("universe.jpg").convert()
-endingcat = pygame.image.load("sadcat.png").convert_alpha()
 
-endingtext = font.render("Game Over!", True, white)
-textArea = endingtext.get_rect()
-textArea.center = (-300, -400)
-gameoverArea = gameover.get_rect(topleft=(-10000,-10000))
-endingcatArea = endingcat.get_rect(topleft=(-1000, -1000))
 
 clock = pygame.time.Clock()
 
 pygame.mixer.music.load("gamemusic.wav")
 pygame.mixer.music.play(-1)
 
-menu = pygame.image.load("main_menu.png").convert()
-displaySurface.blit(menu, (0, 0))
-menuArea = menu.get_rect(topleft=(0,0))
-
-
 
 while True:
     
     displaySurface.blit(menu, menuArea)
+    displaySurface.blit(howtoplay, (150, 80))
+    displaySurface.blit(luck, (550, 120))
     pygame.display.flip()
 
     for event in pygame.event.get():
@@ -135,8 +129,7 @@ while True:
                                 text = font.render('Points: '+str(points), True, white)
                                 if points <= 0:
                                     gameoverArea = gameover.get_rect(topleft=(0,0)) # gameover screen appears
-                                    textArea = endingtext.get_rect(center = (600, 452))
-                                    endingcatArea = endingcat.get_rect(topleft=(700, 400))
+                                    gameovertextAREA = gameovertext.get_rect(midtop=(600,400))
 
                         j = 0  # every time a collision between pie and bullet happens, both of them are removed from the lists
                         for i in range(len(pieList) - 1, -1, -1):
@@ -161,11 +154,12 @@ while True:
                             displaySurface.blit(bullets[i], bcoordinates[i])
                         for i in range(0, len(pieList)):  # blits pies into the screen repeatedly
                             displaySurface.blit(pieList[i], coordinateList[i])
-                        displaySurface.blit(text, (0,0))
+
+                        displaySurface.blit(text, (10,10))
                         displaySurface.blit(gameover, gameoverArea)
-                        displaySurface.blit(endingtext,textArea)
                         displaySurface.blit(menu, menuArea)
-                        displaySurface.blit(endingcat, endingcatArea)
+                        displaySurface.blit(gameovertext, gameovertextAREA)
+
                         pygame.display.flip()
 
 
